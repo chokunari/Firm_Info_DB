@@ -3,9 +3,17 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+//-追記
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var validator = require('express-validator');
+//追記-
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+//-追記
+var login = require('./routes/login');
+//追記-
 
 var app = express();
 
@@ -21,6 +29,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+//-追記
+app.use('/login',login);
+//追記-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
