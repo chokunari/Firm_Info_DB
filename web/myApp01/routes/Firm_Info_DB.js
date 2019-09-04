@@ -5,6 +5,26 @@ const { check, validationResult } = require('express-validator');
 const http = require('https');
 require('date-utils');
 
+//ログ出力モジュール
+const log4js = require('log4js');
+log4js.configure({
+  appenders: {
+    accessLog: { type: 'file', filename: 'access.log' },
+    editLog: { type: 'file', filename: 'edit.log' }
+  },
+  categories: {
+    default: { appenders: [ 'accessLog' ], level: 'info' },
+    editLog: { appenders: [ 'editLog' ], level: 'info' }
+  }
+});
+//アクセスログ取得用設定。
+let accessLogger = log4js.getLogger();
+accessLogger.level = 'debug';
+//企業情報編集ログ取得用設定。
+let editLogger = log4js.getLogger('editLog');
+editLogger.level = 'debug';
+
+//PostgreSQL用設定。
 const pg_config = {
     user: 'postgres',
     host: '172.20.0.2',
@@ -48,7 +68,8 @@ router.post('/login',(req,res,next)=>{
         req.session.UserID = req.body['UserID'];
         let now = new Date();
         now.setTime(now.getTime() + 1000*60*60*9);
-        req.session.LoginTime = now.toFormat('YYYY/MM/DD HH24:MI:SS'); 
+        req.session.LoginTime = now.toFormat('YYYY/MM/DD HH24:MI:SS');
+        accessLogger.info(UserID + 'がログインしました。');
         res.redirect('/Firm_Info_DB/top');
         pg_client.end();
       }else{
@@ -58,6 +79,7 @@ router.post('/login',(req,res,next)=>{
           title:title,
           msg:msg
         }
+        accessLogger.info(UserID + 'がログインに失敗しました。');
         res.render('Firm_Info_DB/login', data)
       }
   })
@@ -251,7 +273,8 @@ router.post('/research'/* ,[
     let now = new Date();
     now.setTime(now.getTime() + 1000*60*60*9);
     req.session.EditEnd = now.toFormat('YYYY/MM/DD HH24:MI:SS'); 
-  
+    let editTime = (req.session.EditEnd - req.session.EditStart) / (1000 * 60);
+    editLogger.info(req.session.UserID + 'が企業ID' + req.session.firm_id + 'を' +  editTime + 'で編集しました。');
     res.redirect('/Firm_Info_DB/top');
     pg_client.end();
   })
