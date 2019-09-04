@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">  
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <div role="header-list">
+        <ul class="user-status">
+            <li><%= UserID %></li>
+            <li>LoginTime(JST):<%= LoginTime %></li>
+        </ul>
+    </div>
+    <div role="main">
+      <h1><%= title %></h1>
+      <h2><%= msg %></h2>
+      <table>
+            <% for(let i in content){ %>
+            <tr>
+                <% let obj = content[i]; %>
+                <form method="POST" action="/Firm_Info_DB/top">
+                    <th><input type="submit" name="firm_id" value="<%= obj.firm_id %>"></th>
+                    <td><a href="<%= obj.firm_url %>" target="_blank" ><%= obj.firm_name %></a></td>
+                </form>
+            </tr>
+            <% } %>
+          </table>
+    </div>
+  </body>
+</html>

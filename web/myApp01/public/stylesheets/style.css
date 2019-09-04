@@ -6,3 +6,28 @@ body {
 a {
   color: #00B7FF;
 }
+
+h2.login_error {
+  color:red;
+  font-size: 20px;
+}
+
+.user-status {
+  list-style: none;
+  color: white;
+  background-color: darkblue;
+  float: right;
+  width: 300px;
+}
+
+ul.user-status li {
+  margin: 20px 20px;
+}
+
+p.execMaxMsg {
+  color: red;
+}
+
+.required_item {
+  color: red;
+}

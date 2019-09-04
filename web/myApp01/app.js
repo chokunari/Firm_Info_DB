@@ -6,13 +6,19 @@ var logger = require('morgan');
 //-追記
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var session_opt = {
+  secret:'keyboard cat',
+  resave:false,
+  saveUninitialized:false,
+  cookie:{maxAge:60 * 15 * 1000}
+};
 var validator = require('express-validator');
 //追記-
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 //-追記
-var login = require('./routes/login');
+var Firm_Info_DB = require('./routes/Firm_Info_DB');
 //追記-
 
 var app = express();
@@ -27,10 +33,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//-追記
+app.use(session(session_opt));
+//追記-
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 //-追記
-app.use('/login',login);
+app.use('/Firm_Info_DB',Firm_Info_DB);
 //追記-
 
 // catch 404 and forward to error handler

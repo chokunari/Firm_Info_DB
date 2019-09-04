@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">  
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <!--<script src = "/viewChange/exectiveNameAdd.js"></script>-->
+    <script>
+        //役員は２人目から追加
+        let n = 2;
+        //エラーメッセージの表示済みフラグ
+        let execMaxMsgFlag = 0;
+        function addExective(){
+            if(n<=15){
+                var target = document.getElementById("exectiveName");
+                // ボタンが押されたらタグを作って追加
+                var newP = document.createElement("p");
+                // 作成したタグの中身を作成
+                newP.innerHTML = "現在の役員の名前(" + n + ')：<input type="text" name="exective_name' + n + '" class="' + '"exective_name' + n + '" >';
+                // 作ったタグを指定した要素の子要素として追加
+                target.appendChild(newP);
+                n++;
+            }else{
+                //エラーメッセージを１回のみ表示させるためにexecMaxMsgのクラスのタグがいるかチェック
+                if(execMaxMsgFlag === 0){
+                    var target = document.getElementById("exectiveName");
+                    let msgTag =  document.createElement("p");
+                    msgTag.className = 'execMaxMsg';
+                    msgTag.innerHTML = "役員の最大登録人数は15人です！";
+                    target.appendChild(msgTag);
+                    execMaxMsgFlag = 1;
+                }
+            }
+        }
+
+        function requiredCheck(){
+            let flag = 1;
+            //let ceo_name = document.getElementById('ceo_name');
+            let requiredCheckMsg = '';
+            if(document.textform.ceo_name.value === ''){
+                flag = 0;
+                requiredCheckMsg += '「現在の社長の名前」';
+                //window.alert('CEO');
+            }
+            if(document.textform.settling_day.value == ''){
+                flag = 0;
+                requiredCheckMsg += '「決算日（月／日）」';
+                //window.alert('決算日');
+            }
+            if(document.textform.exective_name1.value == ''){
+                flag = 0;
+                requiredCheckMsg += '「現在の役員の名前」';
+                //window.alert('役員');
+            }
+            if(document.textform.ir_url.value == ''){
+                flag = 0;
+                requiredCheckMsg += '「IRページのURL」';
+                //window.alert('IR');
+            }
+            if(flag === 0){
+                requiredCheckMsg += 'が未入力です。'
+                window.alert(requiredCheckMsg);
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+    </script>
+    <div role="header-list">
+        <ul class="user-status">
+            <li><%= UserID %></li>
+            <li>LoginTime(JST):<%= LoginTime %></li>
+            <li>EditStart(JST):<%= EditStart %></li>
+        </ul>
+    </div>
+    <div role="main">
+        <h1><%= title %></h1>
+        <div class="research_form">
+            <h2><span class="required_item">*</span>がついた項目は必須項目です。</h2>
+            <div class="required_item"><%- required_item_error %></div>
+            <form method="POST" name="textform"　action="/Firm_Info_DB/research" onsubmit="return requiredCheck()">
+                <% let obj = content[0]; %>
+                <p>企業コード：<%= obj.firm_id %></p>
+                <input type="hidden" name="firm_id" value="<%= obj.firm_id %>">
+                <p>企業名：<%= obj.firm_name %></p>
+                <p>公式HP：<span><a href="<%= obj.firm_url %>" target="_blank" ><%= obj.firm_url %></a></span></p>
+                <p>ウェブサイトの状況：
+                    <select name="site_status">
+                        <option value="0">０：アクセス成功</option>
+                        <option value="1">１：アクセスブロック</option>
+                        <option value="2">２：サイト期限切れ／ドメイン販売中</option>
+                        <option value="3">３：メンテナンス中</option>
+                        <option value="4">４：その他</option>
+                    </select>
+                </p>
+                <p><span class="required_item">*</span>現在の社長の名前：<input type="text" name="ceo_name" id="ceo_name" value="<%= ceo_name %>"></p>
+                <p><span class="required_item">*</span>決算日（月／日）：<input type="date" min="2019-01-01" max="2019-12-31" name="settling_day" id="settling_day" value="<%= settling_day %>"></p>
+                <div id="exectiveName">
+                    <p><span class="required_item">*</span>現在の役員の名前(1)：<input type="text" name="exective_name1" id="exective_name1" value="<%= exective_name1 %>"></p>                    
+                </div>
+                <button type="button" onclick="addExective()">役員追加</button>
+                <p><span class="required_item">*</span>IRページのURL：<input type="text" name="ir_url" id="ir_url" value="<%= ir_url %>"></p>
+                <p>社長の顔写真のURL：<input type="text" name="ceo_face_pic_url" value="<%= ceo_face_pic_url %>"></p>
+                <input type="submit" value="登録">
+            </form>
+        </div>
+    </div>
+  </body>
+</html>

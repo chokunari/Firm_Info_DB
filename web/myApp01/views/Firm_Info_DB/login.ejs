@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">  
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <div role="main">
+      <h1><%= title %></h1>
+      <p>Welcome to <%= title %></p>
+      <h2>Please Login!!</h2>
+      <% if(msg){ %>
+      <h2 class="login_error"><%= msg %></h2>
+      <% } %>
+      <form method="POST" action="/Firm_Info_DB/login">
+        <p>UserID:</p>
+        <input type="text" name="UserID">
+        <p>Password:</p>
+        <input type="password" name="password">
+        <br>
+        <input type="submit" value="login">    
+      </form>
+    </div>
+  </body>
+</html>
