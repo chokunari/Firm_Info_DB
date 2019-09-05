@@ -123,6 +123,7 @@ router.post('/top',(req,res,next)=>{
   req.session.firm_id = req.body.firm_id;
   let now = new Date();
   now.setTime(now.getTime() + 1000*60*60*9);
+  req.session.editstart = now.getTime();
   req.session.EditStart = now.toFormat('YYYY/MM/DD HH24:MI:SS'); 
   res.redirect('/Firm_Info_DB/research');
 });
@@ -272,9 +273,15 @@ router.post('/research'/* ,[
   .then(results =>{
     let now = new Date();
     now.setTime(now.getTime() + 1000*60*60*9);
+    req.session.editend = now.getTime();
+    editLogger.info(req.session.editstart);
+    editLogger.info(req.session.editend);
     req.session.EditEnd = now.toFormat('YYYY/MM/DD HH24:MI:SS'); 
-    let editTime = (req.session.EditEnd - req.session.EditStart) / (1000 * 60);
-    editLogger.info(req.session.UserID + 'が企業ID' + req.session.firm_id + 'を' +  editTime + 'で編集しました。');
+    let editTime = req.session.editend - req.session.editstart;
+    editTimeHour = editTime / (1000 * 60 * 60);
+    editTimeMinute = (editTimeHour - Math.floor(editTimeHour)) * 60;
+    editTimeSecond = (editTimeMinute - Math.floor(editTimeMinute)) * 60;
+    editLogger.info(req.session.UserID + 'が企業ID' + req.session.firm_id + 'を' +  ('00' + Math.floor(editTimeHour)).slice(-2) + ':' + ('00' + Math.floor(editTimeMinute)).slice(-2) + ':' + ('00' + Math.round(editTimeSecond)).slice(-2) + 'で編集しました。');
     res.redirect('/Firm_Info_DB/top');
     pg_client.end();
   })
