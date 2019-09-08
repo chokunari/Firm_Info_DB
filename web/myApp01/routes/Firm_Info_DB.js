@@ -27,7 +27,7 @@ editLogger.level = 'debug';
 //PostgreSQL用設定。
 const pg_config = {
     user: 'postgres',
-    host: '172.20.0.2',
+    host: '172.20.0.3',
     database: 'firmlist_db',
     password: 'postgres',
     port: 5432,
